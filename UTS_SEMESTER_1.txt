@@ -1,0 +1,187 @@
+Private Sub BtnCari_Click()
+If BtnCari.Caption = "Cari" Then
+  On Error GoTo Salah_Cari
+  Sheet1.Range("A1").CurrentRegion.AdvancedFilter Action:=xlFilterCopy, _
+  CriteriaRange:=Sheet1.Range("KRITERIA"), _
+  CopyToRange:=Sheet1.Range("HASIL_CARI"), Unique:=False
+  Call Listbox_Filter
+  BtnCari.Caption = "Batal"
+  Exit Sub
+Salah_Cari:
+  MsgBox "Data Tidak Ditemukan!", vbCritical, "Aplikasi VBA"
+Else
+  Call Listbox
+  ComboKategori.Value = ""
+  TextKataKunci.Value = ""
+  BtnCari.Caption = "Cari"
+End If
+End Sub
+
+Private Sub BtnEdit_Click()
+On Error GoTo Salah
+Dim EDIT As Object
+Set EDIT = Sheet1.Range("A2:A100000").Find(What:=Me.TextRegistrasi, _
+LookIn:=xlValues)
+  EDIT.Offset(0, 1).Value = TextNama.Value
+  EDIT.Offset(0, 2).Value = ComboJurusan.Value
+  EDIT.Offset(0, 3).Value = ComboJK.Value
+  EDIT.Offset(0, 4).Value = TextAlamat.Value
+  EDIT.Offset(0, 5).Value = TextTelepon.Value
+  EDIT.Offset(0, 6).Value = TextEmail.Value
+  Call KosongText
+  Call KodeTerakhir
+  Call KodeOtomatis
+Exit Sub
+Salah:
+MsgBox "Nomor Registrasi yang akan dihapus tidak ditemukan"
+End Sub
+
+Private Sub BtnHapus_Click()
+On Error GoTo Salah
+Dim HAPUS As Object
+Set HAPUS = Sheet1.Range("A2:A100000").Find(What:=Me.TextRegistrasi, _
+LookIn:=xlValues)
+  HAPUS.Value = ""
+  HAPUS.Offset(0, 1).Value = ""
+  HAPUS.Offset(0, 2).Value = ""
+  HAPUS.Offset(0, 3).Value = ""
+  HAPUS.Offset(0, 4).Value = ""
+  HAPUS.Offset(0, 5).Value = ""
+  HAPUS.Offset(0, 6).Value = ""
+  Sheet1.Range("HAPUS_REGISTRASI").Sort Key1:=("HAPUS_REGISTRASI"), _
+  ORDER1:=xlAscending, Header:=xlNo
+  Call KosongText
+  Call KodeTerakhir
+  Call KodeOtomatis
+Exit Sub
+Salah:
+MsgBox "Nomor Registrasi yang akan dihapus tidak ditemukan"
+End Sub
+
+Private Sub BtnKeluar_Click()
+If BtnKeluar.Caption = "Batal" Then
+  Call KosongText
+  Call KodeTerakhir
+  Call KodeOtomatis
+  BtnKeluar.Caption = "Tutup"
+Else
+  Unload Me
+End If
+End Sub
+
+Sub KosongText()
+TextRegistrasi = ""
+TextNama = ""
+TextTelepon = ""
+TextAlamat = ""
+ComboJurusan = ""
+ComboJK = ""
+TextEmail = ""
+End Sub
+
+Sub Listbox()
+On Error Resume Next
+With ListBox1
+  .ColumnHeads = True
+  .ColumnCount = 7
+  .RowSource = Sheet1.Range("DATA").Address
+End With
+End Sub
+
+Sub Listbox_Filter()
+On Error Resume Next
+With ListBox1
+  .ColumnHeads = True
+  .ColumnCount = 7
+  .RowSource = Sheet1.Range("DATA_FILTER").Address
+End With
+End Sub
+
+Sub Combo()
+With ComboJurusan
+  .Clear
+  .AddItem "ADP"
+  .AddItem "MIK"
+  .AddItem "AKP"
+  .AddItem "ITS"
+End With
+
+With ComboJK
+  .Clear
+  .AddItem "Laki-laki"
+  .AddItem "Perempuan"
+End With
+
+With ComboKategori
+  .Clear
+  .AddItem "Nama Lengkap"
+  .AddItem "Jurusan"
+  .AddItem "Jenis Kelamin"
+  .AddItem "Telepon"
+End With
+End Sub
+
+Sub KodeOtomatis()
+If Sheet1.Range("I2").Value >= 999 Then
+  TextRegistrasi.Value = "REG" & Sheet1.Range("I2").Value + 1
+ElseIf Sheet1.Range("I2").Value >= 99 Then
+  TextRegistrasi.Value = "REG0" & Sheet1.Range("I2").Value + 1
+ElseIf Sheet1.Range("I2").Value >= 9 Then
+  TextRegistrasi.Value = "REG00" & Sheet1.Range("I2").Value + 1
+Else
+  TextRegistrasi.Value = "REG000" & Sheet1.Range("I2").Value + 1
+End If
+End Sub
+
+Sub KodeTerakhir()
+Dim DATA As Object
+  Set DATA = Sheet1.Range("A1000000").End(xlUp)
+  Sheet1.Range("I3").Value = DATA.Offset(0, 0).Value
+End Sub
+
+Private Sub BtnSimpan_Click()
+If TextNama = "" Or TextRegistrasi = "" Or ComboJurusan = "" _
+  Or ComboJK = "" Or TextAlamat = "" Or TextTelepon = "" Or TextEmail = "" Then
+  MsgBox "Data masih kosong!"
+Else
+  Dim SIMPAN As Object
+  Set SIMPAN = Sheet1.Range("A1000000").End(xlUp)
+    SIMPAN.Offset(1, 0).Value = TextRegistrasi.Value
+    SIMPAN.Offset(1, 1).Value = TextNama.Value
+    SIMPAN.Offset(1, 2).Value = ComboJurusan.Value
+    SIMPAN.Offset(1, 3).Value = ComboJK.Value
+    SIMPAN.Offset(1, 4).Value = TextAlamat.Value
+    SIMPAN.Offset(1, 5).Value = TextTelepon.Text
+    SIMPAN.Offset(1, 6).Value = TextEmail.Value
+    Call KosongText
+    Call KodeOtomatis
+    Call Lisbox
+End If
+End Sub
+
+Private Sub ComboKategori_Click()
+Sheet1.Range("I5").Value = ComboKategori.Value
+End Sub
+
+Private Sub ListBox1_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+TextRegistrasi.Value = ListBox1.List(Me.ListBox1.ListIndex, 0)
+TextNama.Value = ListBox1.List(Me.ListBox1.ListIndex, 1)
+ComboJurusan.Value = ListBox1.List(Me.ListBox1.ListIndex, 2)
+ComboJK.Value = ListBox1.List(Me.ListBox1.ListIndex, 3)
+TextAlamat.Value = ListBox1.List(Me.ListBox1.ListIndex, 4)
+TextTelepon.Value = ListBox1.List(Me.ListBox1.ListIndex, 5)
+TextEmail.Value = ListBox1.List(Me.ListBox1.ListIndex, 6)
+BtnKeluar.Caption = "Batal"
+End Sub
+
+Private Sub TextKataKunci_Change()
+Sheet1.Range("I6").Value = TextKataKunci.Value
+End Sub
+
+Private Sub UserForm_Initialize()
+Call KosongText
+Call Combo
+Call Listbox
+Call KodeTerakhir
+Call KodeOtomatis
+End Sub

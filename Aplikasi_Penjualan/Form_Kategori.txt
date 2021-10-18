@@ -20,12 +20,32 @@ If Sheet3.Range("E2").Value >= 99 Then
 Else
   TextKode.Value = "K0" & Sheet3.Range("E2").Value + 1
 End If
+TextKode.Locked = True
 End Sub
 
 Sub Bersih()
 TextKode = ""
 TextKategori = ""
 BtnTutup.Caption = "Tutup"
+End Sub
+
+Private Sub BtnSimpan_Click()
+If TextKode = "" Or TextKategori = "" Then
+  MsgBox "Data masih ada yang kosong, silahkan lengkapi!", vbCritical, "Validasi Form"
+Else
+Dim SIMPAN As Object
+Set SIMPAN = Sheet3.Range("A1000000").End(xlUp)
+  SIMPAN.Offset(1, 0).Value = TextKode.Value
+  SIMPAN.Offset(1, 1).Value = TextKategori.Value
+  SIMPAN.Offset(1, 2).Value = Date
+  MsgBox "Data berhasil ditambahkan!", vbInformation, "Success"
+  Call Bersih
+  Call Kode_Otomatis
+End If
+End Sub
+
+Private Sub BtnTutup_Click()
+Unload Me
 End Sub
 
 Private Sub UserForm_Initialize()

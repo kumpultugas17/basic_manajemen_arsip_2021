@@ -1,0 +1,34 @@
+'Function mencari jumlah row
+'Function CountRow(vCol As String)
+'CountRow = Cells(Rows.Count, vCol).End(xlUp).Row
+'End Function
+
+Sub Kode_Terakhir()
+Dim KODE As Object
+  Set KODE = Sheet3.Range("A1000000").End(xlUp)
+  If KODE = "Kode" Then
+    Sheet3.Range("E3").Value = 0
+  Else
+    Sheet3.Range("E3").Value = KODE.Offset(0, 0).Value
+  End If
+End Sub
+
+Sub Kode_Otomatis()
+Call Kode_Terakhir
+If Sheet3.Range("E2").Value >= 99 Then
+  TextKode.Value = "K" & Sheet3.Range("E2").Value + 1
+Else
+  TextKode.Value = "K0" & Sheet3.Range("E2").Value + 1
+End If
+End Sub
+
+Sub Bersih()
+TextKode = ""
+TextKategori = ""
+BtnTutup.Caption = "Tutup"
+End Sub
+
+Private Sub UserForm_Initialize()
+Call Bersih
+Call Kode_Otomatis
+End Sub

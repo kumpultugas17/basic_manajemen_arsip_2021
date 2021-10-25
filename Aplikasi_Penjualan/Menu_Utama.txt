@@ -1,0 +1,24 @@
+Private Sub Label_Dashboard_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+  Label_Primary_Dashboard.Visible = True
+  Label_Secondary_Dashboard.Visible = True
+  Label_Primary_Manajemen_Barang.Visible = False
+  Label_Secondary_Manajemen_Barang.Visible = False
+End Sub
+
+Private Sub Label_Manajemen_Barang_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+  Label_Primary_Dashboard.Visible = False
+  Label_Secondary_Dashboard.Visible = False
+  Label_Primary_Manajemen_Barang.Visible = True
+  Label_Secondary_Manajemen_Barang.Visible = True
+End Sub
+
+Private Sub UserForm_Initialize()
+Call Menu_awal
+End Sub
+
+Sub Menu_awal()
+  Label_Primary_Dashboard.Visible = False
+  Label_Secondary_Dashboard.Visible = False
+  Label_Primary_Manajemen_Barang.Visible = False
+  Label_Secondary_Manajemen_Barang.Visible = False
+End Sub

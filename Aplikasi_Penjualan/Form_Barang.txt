@@ -1,0 +1,122 @@
+Sub Kode_Otomatis()
+If Sheet1.Range("H4").Value >= 99 Then
+  textKodeBarang.Value = "B" & Sheet1.Range("H4").Value + 1
+ElseIf Sheet1.Range("H4").Value >= 9 And Sheet1.Range("H4").Value <= 98 Then
+  textKodeBarang.Value = "B0" & Sheet1.Range("H4").Value + 1
+Else
+  textKodeBarang.Value = "B00" & Sheet1.Range("H4").Value + 1
+End If
+textKodeBarang.Locked = True
+End Sub
+
+Sub Bersih_Text()
+  textKodeBarang = ""
+  textNamaBarang = ""
+  comboKategori = ""
+  textMerk = ""
+  textHarga = ""
+  textStok = ""
+End Sub
+
+Private Sub btnEdit_Click()
+On Error GoTo Error_Edit
+Pesan = MsgBox("Data akan diedit ?", vbQuestion + vbYesNo, "Hapus Data")
+If Pesan = vbYes Then
+Dim eRow As Object
+Set eRow = Sheet1.Range("A4:A100000").Find(What:=Me.textKodeBarang, LookIn:=xlValues)
+  eRow.Offset(0, 0).Value = textKodeBarang.Value
+  eRow.Offset(0, 1).Value = textNamaBarang.Value
+  eRow.Offset(0, 2).Value = comboKategori.Value
+  eRow.Offset(0, 3).Value = textMerk.Value
+  eRow.Offset(0, 5).Value = textHarga.Value
+  eRow.Offset(0, 5).Value = textStok.Value
+  ListBox1.RowSource = Sheet1.Range("DATA_BARANG").Address
+  MsgBox "Data baru berhasil diupdate!", vbInformation, "Aplikasi Penjualan"
+  Call Bersih_Text
+  Call Kode_Otomatis
+Else
+  Call Bersih_Text
+  Call Kode_Otomatis
+End If
+Exit Sub
+Error_Edit:
+  MsgBox "Silahkan pilih data yang akan diupdate! Double click pada Listbox", vbCritical, "Error Update"
+End Sub
+
+Private Sub btnHapus_Click()
+On Error GoTo Error_Hapus
+Pesan = MsgBox("Data akan dihapus ?", vbQuestion + vbYesNo, "Hapus Data")
+If Pesan = vbYes Then
+  Dim dRow As Object
+  Set dRow = Sheet1.Range("A4:A100000").Find(What:=Me.textKodeBarang, LookIn:=xlValues)
+    dRow.Value = ""
+    dRow.Offset(0, 1).Value = ""
+    dRow.Offset(0, 2).Value = ""
+    dRow.Offset(0, 3).Value = ""
+    dRow.Offset(0, 4).Value = ""
+    dRow.Offset(0, 5).Value = ""
+    ListBox1.RowSource = Sheet1.Range("DATA_BARANG").Address
+    MsgBox "Data baru berhasil dihapus!", vbInformation, "Aplikasi Penjualan"
+    Call Bersih_Text
+    Call Kode_Otomatis
+Else
+  Call Bersih_Text
+  Call Kode_Otomatis
+End If
+Exit Sub
+Error_Hapus:
+  MsgBox "Silahkan pilih data yang akan dihapus! Double click pada Listbox", vbCritical, "Error Delete"
+End Sub
+
+Private Sub BtnSimpan_Click()
+If textKodeBarang = "" Or textNamaBarang = "" Or comboKategori = "" _
+Or textHarga = "" Or textStok = "" Then
+  MsgBox "Silahkan lengkapi data!!", vbCritical, "Tambah Data"
+Else
+'Proses simpan
+Dim SIMPAN As Object
+Set SIMPAN = Sheet1.Range("A10000").End(xlUp)
+  SIMPAN.Offset(1, 0).Value = textKodeBarang.Value
+  SIMPAN.Offset(1, 1).Value = textNamaBarang.Value
+  SIMPAN.Offset(1, 2).Value = comboKategori.Value
+  SIMPAN.Offset(1, 3).Value = textMerk.Value
+  SIMPAN.Offset(1, 4).Value = textHarga.Value
+  SIMPAN.Offset(1, 5).Value = textStok.Value
+  ListBox1.RowSource = Sheet1.Range("DATA_BARANG").Address
+  'Pesan
+  MsgBox "Data baru berhasil ditambahkan!", vbInformation, "Aplikasi Penjualan"
+  'Bersihkan Text
+  Call Bersih_Text
+  Call Kode_Otomatis
+End If
+End Sub
+
+Private Sub BtnTutup_Click()
+Unload Me
+End Sub
+
+Private Sub ListBox1_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+textKodeBarang.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 0)
+textNamaBarang.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 1)
+comboKategori.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 2)
+textHarga.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 3)
+textStok.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 4)
+End Sub
+
+Private Sub UserForm_Initialize()
+On Error Resume Next
+
+Call Bersih_Text
+Call Kode_Otomatis
+Call Listbox
+
+End Sub
+
+Sub Listbox()
+With ListBox1
+  .ColumnCount = 6
+  .ColumnHeads = True
+  .RowSource = Sheet1.Range("DATA_BARANG").Address
+End With
+End Sub
+

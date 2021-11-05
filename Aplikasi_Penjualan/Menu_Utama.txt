@@ -1,8 +1,29 @@
+Private Sub btn_tambah_data_barang_Click()
+UserForm_Barang.btnEdit.Visible = False
+UserForm_Barang.btnHapus.Visible = False
+UserForm_Barang.BtnSimpan.Left = 198
+UserForm_Barang.Show
+End Sub
+
+Private Sub Label_Dashboard_Click()
+MultiPage1.Value = 0
+End Sub
+
 Private Sub Label_Dashboard_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
   Label_Primary_Dashboard.Visible = True
   Label_Secondary_Dashboard.Visible = True
   Label_Primary_Manajemen_Barang.Visible = False
   Label_Secondary_Manajemen_Barang.Visible = False
+  Label_Primary_Manajemen_Pelanggan.Visible = False
+  Label_Secondary_Manajemen_Pelanggan.Visible = False
+  Label_Primary_Manajemen_Kategori.Visible = False
+  Label_Secondary_Manajemen_Kategori.Visible = False
+  Label_Primary_Transaksi.Visible = False
+  Label_Secondary_Transaksi.Visible = False
+End Sub
+
+Private Sub Label_Manajemen_Barang_Click()
+MultiPage1.Value = 1
 End Sub
 
 Private Sub Label_Manajemen_Barang_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
@@ -10,10 +31,87 @@ Private Sub Label_Manajemen_Barang_MouseMove(ByVal Button As Integer, ByVal Shif
   Label_Secondary_Dashboard.Visible = False
   Label_Primary_Manajemen_Barang.Visible = True
   Label_Secondary_Manajemen_Barang.Visible = True
+  Label_Primary_Manajemen_Pelanggan.Visible = False
+  Label_Secondary_Manajemen_Pelanggan.Visible = False
+  Label_Primary_Manajemen_Kategori.Visible = False
+  Label_Secondary_Manajemen_Kategori.Visible = False
+  Label_Primary_Transaksi.Visible = False
+  Label_Secondary_Transaksi.Visible = False
+End Sub
+
+Private Sub Label_Manajemen_Kategori_Click()
+MultiPage1.Value = 3
+End Sub
+
+Private Sub Label_Manajemen_Kategori_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+  Label_Primary_Dashboard.Visible = False
+  Label_Secondary_Dashboard.Visible = False
+  Label_Primary_Manajemen_Barang.Visible = False
+  Label_Secondary_Manajemen_Barang.Visible = False
+  Label_Primary_Manajemen_Pelanggan.Visible = False
+  Label_Secondary_Manajemen_Pelanggan.Visible = False
+  Label_Primary_Manajemen_Kategori.Visible = True
+  Label_Secondary_Manajemen_Kategori.Visible = True
+  Label_Primary_Transaksi.Visible = False
+  Label_Secondary_Transaksi.Visible = False
+End Sub
+
+Private Sub Label_Manajemen_Pelanggan_Click()
+MultiPage1.Value = 2
+End Sub
+
+Private Sub Label_Manajemen_Pelanggan_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+  Label_Primary_Dashboard.Visible = False
+  Label_Secondary_Dashboard.Visible = False
+  Label_Primary_Manajemen_Barang.Visible = False
+  Label_Secondary_Manajemen_Barang.Visible = False
+  Label_Primary_Manajemen_Pelanggan.Visible = True
+  Label_Secondary_Manajemen_Pelanggan.Visible = True
+  Label_Primary_Manajemen_Kategori.Visible = False
+  Label_Secondary_Manajemen_Kategori.Visible = False
+  Label_Primary_Transaksi.Visible = False
+  Label_Secondary_Transaksi.Visible = False
+End Sub
+
+Private Sub Label_Transaksi_Click()
+MultiPage1.Value = 4
+End Sub
+
+Private Sub Label_Transaksi_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+  Label_Primary_Dashboard.Visible = False
+  Label_Secondary_Dashboard.Visible = False
+  Label_Primary_Manajemen_Barang.Visible = False
+  Label_Secondary_Manajemen_Barang.Visible = False
+  Label_Primary_Manajemen_Pelanggan.Visible = False
+  Label_Secondary_Manajemen_Pelanggan.Visible = False
+  Label_Primary_Manajemen_Kategori.Visible = False
+  Label_Secondary_Manajemen_Kategori.Visible = False
+  Label_Primary_Transaksi.Visible = True
+  Label_Secondary_Transaksi.Visible = True
+End Sub
+
+Private Sub Label_Sidebar_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Call Menu_awal
+End Sub
+
+Private Sub Listbox_Barang_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+UserForm_Barang.textKodeBarang.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 0)
+UserForm_Barang.textNamaBarang.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 1)
+UserForm_Barang.comboKategori.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 2)
+UserForm_Barang.textMerk.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 3)
+UserForm_Barang.textHarga.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 4)
+UserForm_Barang.textStok.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 5)
+UserForm_Barang.BtnSimpan.Visible = False
+UserForm_Barang.Show
+End Sub
+
+Private Sub UserForm_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Call Menu_awal
 End Sub
 
 Private Sub UserForm_Initialize()
 Call Menu_awal
+Call Listbox
 End Sub
 
 Sub Menu_awal()
@@ -21,4 +119,18 @@ Sub Menu_awal()
   Label_Secondary_Dashboard.Visible = False
   Label_Primary_Manajemen_Barang.Visible = False
   Label_Secondary_Manajemen_Barang.Visible = False
+  Label_Primary_Manajemen_Pelanggan.Visible = False
+  Label_Secondary_Manajemen_Pelanggan.Visible = False
+  Label_Primary_Manajemen_Kategori.Visible = False
+  Label_Secondary_Manajemen_Kategori.Visible = False
+  Label_Primary_Transaksi.Visible = False
+  Label_Secondary_Transaksi.Visible = False
+End Sub
+
+Sub Listbox()
+With Listbox_Barang
+  .ColumnCount = 6
+  .ColumnHeads = True
+  .RowSource = Sheet1.Range("DATA_BARANG").Address(External:=True)
+End With
 End Sub

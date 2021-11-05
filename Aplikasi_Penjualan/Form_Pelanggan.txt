@@ -1,0 +1,56 @@
+Private Sub btnEdit_Click()
+Dim eRow As Object
+Set eRow = Sheet2.Range("A4:A100000").Find(What:=Me.textKode, LookIn:=xlValues)
+  eRow.Offset(0, 0).Value = textKode.Value
+  eRow.Offset(0, 1).Value = textNama.Value
+  If OptionLaki_laki.Value = True Then
+    eRow.Offset(0, 2).Value = "Laki-laki"
+  Else
+    eRow.Offset(0, 2).Value = "Perempuan"
+  End If
+  eRow.Offset(0, 3).Value = textAlamat.Value
+  eRow.Offset(0, 4).Value = textTelepon.Value
+End Sub
+
+Private Sub btnHapus_Click()
+
+End Sub
+
+Private Sub BtnSimpan_Click()
+If textKode = "" Or textNama = "" Or textAlamat = "" Or textTelepon = "" Then
+  MsgBox "Silahkan isi data dengan lengkap!", vbCritical, "FORM PELANGGAN"
+Else
+  Dim SIMPAN As Object
+  Set SIMPAN = Sheet2.Range("A10000").End(xlUp)
+    SIMPAN.Offset(1, 0).Value = textKode.Value
+    SIMPAN.Offset(1, 1).Value = textNama.Value
+    If OptionLaki_laki.Value = True Then
+      SIMPAN.Offset(1, 2).Value = "Laki-laki"
+    Else
+      SIMPAN.Offset(1, 2).Value = "Perempuan"
+    End If
+    SIMPAN.Offset(1, 3).Value = textAlamat.Value
+    SIMPAN.Offset(1, 4).Value = textTelepon.Value
+End If
+End Sub
+
+Private Sub ListBox1_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+textKode.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 0)
+textNama.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 1)
+If Me.ListBox1.List(Me.ListBox1.ListIndex, 2) = "Laki-laki" Then
+  OptionLaki_laki.Value = True
+Else
+  OptionPerempuan.Value = True
+End If
+textAlamat.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 3)
+textTelepon.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 4)
+End Sub
+
+Private Sub UserForm_Initialize()
+On Error Resume Next
+With ListBox1
+  .ColumnCount = 5
+  .ColumnHeads = True
+  .RowSource = Sheet2.Range("DATA_PELANGGAN").Address
+End With
+End Sub

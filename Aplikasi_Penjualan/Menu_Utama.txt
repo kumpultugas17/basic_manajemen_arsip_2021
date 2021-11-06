@@ -1,8 +1,15 @@
 Private Sub btn_tambah_data_barang_Click()
 UserForm_Barang.btnEdit.Visible = False
 UserForm_Barang.btnHapus.Visible = False
-UserForm_Barang.BtnSimpan.Left = 198
+UserForm_Barang.btnSimpan.Left = 198
 UserForm_Barang.Show
+End Sub
+
+Private Sub btn_tambah_data_pelanggan_Click()
+UserForm_Pelanggan.btnEdit.Visible = False
+UserForm_Pelanggan.btnHapus.Visible = False
+UserForm_Pelanggan.btnSimpan.Left = 204
+UserForm_Pelanggan.Show
 End Sub
 
 Private Sub Label_Dashboard_Click()
@@ -101,8 +108,22 @@ UserForm_Barang.comboKategori.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.L
 UserForm_Barang.textMerk.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 3)
 UserForm_Barang.textHarga.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 4)
 UserForm_Barang.textStok.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 5)
-UserForm_Barang.BtnSimpan.Visible = False
+UserForm_Barang.btnSimpan.Visible = False
 UserForm_Barang.Show
+End Sub
+
+Private Sub ListBox_Pelanggan_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+UserForm_Pelanggan.textKode.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 0)
+UserForm_Pelanggan.textNama.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 1)
+If Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 2) = "Laki-laki" Then
+  UserForm_Pelanggan.OptionLaki_laki.Value = True
+Else
+  UserForm_Pelanggan.OptionPerempuan.Value = True
+End If
+UserForm_Pelanggan.textAlamat.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 3)
+UserForm_Pelanggan.textTelepon.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 4)
+UserForm_Pelanggan.btnSimpan.Visible = False
+UserForm_Pelanggan.Show
 End Sub
 
 Private Sub UserForm_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
@@ -132,5 +153,11 @@ With Listbox_Barang
   .ColumnCount = 6
   .ColumnHeads = True
   .RowSource = Sheet1.Range("DATA_BARANG").Address(External:=True)
+End With
+
+With ListBox_Pelanggan
+  .ColumnCount = 5
+  .ColumnHeads = True
+  .RowSource = Sheet2.Range("DATA_PELANGGAN").Address(External:=True)
 End With
 End Sub

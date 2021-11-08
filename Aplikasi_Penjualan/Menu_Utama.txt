@@ -1,15 +1,31 @@
 Private Sub btn_tambah_data_barang_Click()
 UserForm_Barang.btnEdit.Visible = False
 UserForm_Barang.btnHapus.Visible = False
-UserForm_Barang.btnSimpan.Left = 198
+UserForm_Barang.BtnSimpan.Left = 198
 UserForm_Barang.Show
 End Sub
 
 Private Sub btn_tambah_data_pelanggan_Click()
 UserForm_Pelanggan.btnEdit.Visible = False
 UserForm_Pelanggan.btnHapus.Visible = False
-UserForm_Pelanggan.btnSimpan.Left = 204
+UserForm_Pelanggan.BtnSimpan.Left = 204
 UserForm_Pelanggan.Show
+End Sub
+
+Private Sub BtnSimpan_Kategori_Click()
+If TextKode_Kategori = "" Or TextKategori = "" Then
+  MsgBox "Data masih ada yang kosong, silahkan lengkapi!", vbCritical, "Validasi Form"
+Else
+Dim SIMPAN As Object
+Set SIMPAN = Sheet3.Range("A1000000").End(xlUp)
+  SIMPAN.Offset(1, 0).Value = TextKode_Kategori.Value
+  SIMPAN.Offset(1, 1).Value = TextKategori.Value
+  SIMPAN.Offset(1, 2).Value = Date
+  MsgBox "Data berhasil ditambahkan!", vbInformation, "Success"
+  Call Bersih_Text
+  Call Otomatis_Kategori
+  Call Listbox
+End If
 End Sub
 
 Private Sub Label_Dashboard_Click()
@@ -108,12 +124,12 @@ UserForm_Barang.comboKategori.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.L
 UserForm_Barang.textMerk.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 3)
 UserForm_Barang.textHarga.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 4)
 UserForm_Barang.textStok.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 5)
-UserForm_Barang.btnSimpan.Visible = False
+UserForm_Barang.BtnSimpan.Visible = False
 UserForm_Barang.Show
 End Sub
 
 Private Sub ListBox_Pelanggan_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-UserForm_Pelanggan.textKode.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 0)
+UserForm_Pelanggan.TextKode.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 0)
 UserForm_Pelanggan.textNama.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 1)
 If Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 2) = "Laki-laki" Then
   UserForm_Pelanggan.OptionLaki_laki.Value = True
@@ -122,7 +138,7 @@ Else
 End If
 UserForm_Pelanggan.textAlamat.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 3)
 UserForm_Pelanggan.textTelepon.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 4)
-UserForm_Pelanggan.btnSimpan.Visible = False
+UserForm_Pelanggan.BtnSimpan.Visible = False
 UserForm_Pelanggan.Show
 End Sub
 
@@ -132,7 +148,9 @@ End Sub
 
 Private Sub UserForm_Initialize()
 Call Menu_awal
+Call Bersih_Text
 Call Listbox
+Call Otomatis_Kategori
 End Sub
 
 Sub Menu_awal()
@@ -160,4 +178,36 @@ With ListBox_Pelanggan
   .ColumnHeads = True
   .RowSource = Sheet2.Range("DATA_PELANGGAN").Address(External:=True)
 End With
+
+With ListBox_Kategori
+  .ColumnCount = 3
+  .ColumnHeads = True
+  .RowSource = Sheet3.Range("DATA_KATEGORI").Address(External:=True)
+End With
+End Sub
+
+Sub Bersih_Text()
+'Kategori
+TextKode_Kategori = ""
+TextKategori = ""
+End Sub
+
+Sub Kode_Terakhir_Kategori()
+Dim KODE As Object
+  Set KODE = Sheet3.Range("A1000000").End(xlUp)
+  If KODE = "Kode" Then
+    Sheet3.Range("E3").Value = 0
+  Else
+    Sheet3.Range("E3").Value = KODE.Offset(0, 0).Value
+  End If
+End Sub
+
+Sub Otomatis_Kategori()
+Call Kode_Terakhir_Kategori
+If Sheet3.Range("E2").Value >= 99 Then
+  TextKode_Kategori.Value = "K" & Sheet3.Range("E2").Value + 1
+Else
+  TextKode_Kategori.Value = "K0" & Sheet3.Range("E2").Value + 1
+End If
+TextKode_Kategori.Locked = True
 End Sub

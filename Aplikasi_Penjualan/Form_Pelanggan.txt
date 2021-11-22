@@ -1,7 +1,7 @@
 Private Sub btnEdit_Click()
 Dim eRow As Object
-Set eRow = Sheet2.Range("A4:A100000").Find(What:=Me.textKode, LookIn:=xlValues)
-  eRow.Offset(0, 0).Value = textKode.Value
+Set eRow = Sheet2.Range("A4:A100000").Find(What:=Me.TextKode, LookIn:=xlValues)
+  eRow.Offset(0, 0).Value = TextKode.Value
   eRow.Offset(0, 1).Value = textNama.Value
   If OptionLaki_laki.Value = True Then
     eRow.Offset(0, 2).Value = "Laki-laki"
@@ -20,13 +20,33 @@ Set eRow = Sheet2.Range("A4:A100000").Find(What:=Me.textKode, LookIn:=xlValues)
   Unload Me
 End Sub
 
+Private Sub btnHapus_Click()
+Pesan = MsgBox("Data akan dihapus ?", vbQuestion + vbYesNo, "Hapus Data")
+If Pesan = vbYes Then
+  Dim dRow As Object
+  Set dRow = Sheet2.Range("A4:A100000").Find(What:=Me.TextKode, LookIn:=xlValues)
+    dRow.Value = ""
+    dRow.Offset(0, 1).Value = ""
+    dRow.Offset(0, 2).Value = ""
+    dRow.Offset(0, 3).Value = ""
+    dRow.Offset(0, 4).Value = ""
+    Call HAPUS_PELANGGAN
+    UserForm_Menu.ListBox_Pelanggan.RowSource = Sheet2.Range("DATA_PELANGGAN").Address(External:=True)
+    MsgBox "Data berhasil dihapus!", vbInformation, "Aplikasi Penjualan"
+    Call BtnTutup_Click
+Else
+  Call Bersih_Text
+  Call Kode_Otomatis
+End If
+End Sub
+
 Private Sub BtnSimpan_Click()
-If textKode = "" Or textNama = "" Or textAlamat = "" Or textTelepon = "" Then
+If TextKode = "" Or textNama = "" Or textAlamat = "" Or textTelepon = "" Then
   MsgBox "Silahkan isi data dengan lengkap!", vbCritical, "FORM PELANGGAN"
 Else
   Dim SIMPAN As Object
   Set SIMPAN = Sheet2.Range("A10000").End(xlUp)
-    SIMPAN.Offset(1, 0).Value = textKode.Value
+    SIMPAN.Offset(1, 0).Value = TextKode.Value
     SIMPAN.Offset(1, 1).Value = textNama.Value
     If OptionLaki_laki.Value = True Then
       SIMPAN.Offset(1, 2).Value = "Laki-laki"
@@ -59,17 +79,17 @@ End Sub
 
 Sub Kode_Otomatis()
 If Sheet2.Range("G4").Value >= 99 Then
-  textKode.Value = "P" & Sheet2.Range("G4").Value + 1
+  TextKode.Value = "P" & Sheet2.Range("G4").Value + 1
 ElseIf Sheet2.Range("G4").Value >= 9 And Sheet1.Range("G4").Value <= 98 Then
-  textKode.Value = "P0" & Sheet2.Range("G4").Value + 1
+  TextKode.Value = "P0" & Sheet2.Range("G4").Value + 1
 Else
-  textKode.Value = "P00" & Sheet2.Range("G4").Value + 1
+  TextKode.Value = "P00" & Sheet2.Range("G4").Value + 1
 End If
-textKode.Locked = True
+TextKode.Locked = True
 End Sub
 
 Sub Bersih_Text()
-  textKode = ""
+  TextKode = ""
   textNama = ""
   textAlamat = ""
   textTelepon = ""

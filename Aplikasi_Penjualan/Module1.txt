@@ -1,0 +1,38 @@
+Sub HAPUS_BARANG()
+Sheet1.Range("HAPUS_BARANG").Sort Key1:=("HAPUS_BARANG"), _
+  ORDER1:=xlAscending, Header:=xlNo
+End Sub
+
+Sub HAPUS_PELANGGAN()
+Sheet2.Range("HAPUS_PELANGGAN").Sort Key1:=("HAPUS_PELANGGAN"), _
+  ORDER1:=xlAscending, Header:=xlNo
+End Sub
+
+Sub HAPUS_KATEGORI()
+Sheet3.Range("HAPUS_KATEGORI").Sort Key1:=("HAPUS_KATEGORI"), _
+  ORDER1:=xlAscending, Header:=xlNo
+End Sub
+
+Sub Kategori_Pencarian()
+  With UserForm_Menu.comboKategori_Barang
+    .AddItem "Kode"
+    .AddItem "Nama Barang"
+    .AddItem "Kategori"
+    .AddItem "Merk"
+  End With
+  
+  With UserForm_Menu.comboKategori_Pelanggan
+    .AddItem "Kode"
+    .AddItem "Nama Lengkap"
+    .AddItem "Jenis Kelamin"
+    .AddItem "Telepon"
+  End With
+End Sub
+
+Sub Lisbox_Filter()
+  With UserForm_Menu.Listbox_Barang
+    .ColumnCount = 6
+    .ColumnHeads = True
+    .RowSource = Sheet1.Range("DATA_BARANG_FILTER").Address(External:=True)
+  End With
+End Sub

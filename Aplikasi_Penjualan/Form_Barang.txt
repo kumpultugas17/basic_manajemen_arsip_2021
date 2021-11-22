@@ -1,3 +1,13 @@
+Sub Kode_Terakhir()
+Dim KODE As Object
+  Set KODE = Sheet1.Range("A1000000").End(xlUp)
+  If KODE = "Kode" Then
+    Sheet1.Range("H5").Value = 0
+  Else
+    Sheet1.Range("H5").Value = KODE.Offset(0, 0).Value
+  End If
+End Sub
+
 Sub Kode_Otomatis()
 If Sheet1.Range("H4").Value >= 99 Then
   textKodeBarang.Value = "B" & Sheet1.Range("H4").Value + 1
@@ -49,6 +59,7 @@ If Pesan = vbYes Then
     dRow.Offset(0, 3).Value = ""
     dRow.Offset(0, 4).Value = ""
     dRow.Offset(0, 5).Value = ""
+    Call HAPUS_BARANG
     UserForm_Menu.Listbox_Barang.RowSource = Sheet1.Range("DATA_BARANG").Address(External:=True)
     MsgBox "Data baru berhasil dihapus!", vbInformation, "Aplikasi Penjualan"
     Call BtnTutup_Click
@@ -78,6 +89,7 @@ Set SIMPAN = Sheet1.Range("A10000").End(xlUp)
   'Bersihkan Text
   Call Bersih_Text
   Call Kode_Otomatis
+  Unload Me
 End If
 End Sub
 
@@ -89,5 +101,6 @@ Private Sub UserForm_Initialize()
 On Error Resume Next
 Call Bersih_Text
 Call Kode_Otomatis
+Kode_Terakhir
 End Sub
 

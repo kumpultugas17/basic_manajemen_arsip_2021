@@ -1,23 +1,41 @@
 Private Sub Btn_Add_Transaksi_Click()
 If Text_KodePelanggan_Transaksi <> "" And Text_KodeBarang_Transaksi <> "" _
 And Text_Jumlah_Transaksi <> "" Then
-  MsgBox "Simpan Data!"
+  Dim SIMPAN As Object
+    Set SIMPAN = Sheet5.Range("A10000").End(xlUp)
+    SIMPAN.Offset(1, 0).Value = Label_Kode_Transaksi.Caption
+    SIMPAN.Offset(1, 1).Value = Text_KodeBarang_Transaksi.Value
+    SIMPAN.Offset(1, 2).Value = Text_NamaBarang_Transaksi.Value
+    SIMPAN.Offset(1, 3).Value = Text_Merk_Transaksi.Value
+    SIMPAN.Offset(1, 4).Value = Text_Harga_Transaksi.Value
+    SIMPAN.Offset(1, 5).Value = Text_Jumlah_Transaksi.Value
+    SIMPAN.Offset(1, 6).Value = Text_Total_Transaksi.Value
+    Sheet5.Range("I8").Value = Label_Kode_Transaksi.Caption
+    Sheet5.Range("I4").Value = Label_Kode_Transaksi.Caption
+    Text_Subtotal_Transaksi.Value = Sheet5.Range("I9").Value
+    Call Cari_Detail
+    Text_KodeBarang_Transaksi = ""
+    Text_NamaBarang_Transaksi = ""
+    Text_Merk_Transaksi = ""
+    Text_Harga_Transaksi = ""
+    Text_Jumlah_Transaksi = ""
+    Text_Total_Transaksi = ""
 Else
-  MsgBox "Isi Data dengan Lengkap!"
+  MsgBox "Silahkan isi Kode Pelanggan dan Kode Barang!", vbCritical, "Aplikasi Penjualan"
 End If
 End Sub
 
 Private Sub btn_tambah_data_barang_Click()
 UserForm_Barang.btnEdit.Visible = False
 UserForm_Barang.btnHapus.Visible = False
-UserForm_Barang.BtnSimpan.Left = 198
+UserForm_Barang.btnSimpan.Left = 198
 UserForm_Barang.Show
 End Sub
 
 Private Sub btn_tambah_data_pelanggan_Click()
 UserForm_Pelanggan.btnEdit.Visible = False
 UserForm_Pelanggan.btnHapus.Visible = False
-UserForm_Pelanggan.BtnSimpan.Left = 204
+UserForm_Pelanggan.btnSimpan.Left = 204
 UserForm_Pelanggan.Show
 End Sub
 
@@ -174,7 +192,7 @@ UserForm_Barang.comboKategori.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.L
 UserForm_Barang.textMerk.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 3)
 UserForm_Barang.textHarga.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 4)
 UserForm_Barang.textStok.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 5)
-UserForm_Barang.BtnSimpan.Visible = False
+UserForm_Barang.btnSimpan.Visible = False
 UserForm_Barang.Show
 End Sub
 
@@ -193,7 +211,7 @@ Else
 End If
 UserForm_Pelanggan.textAlamat.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 3)
 UserForm_Pelanggan.textTelepon.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 4)
-UserForm_Pelanggan.BtnSimpan.Visible = False
+UserForm_Pelanggan.btnSimpan.Visible = False
 UserForm_Pelanggan.Show
 End Sub
 
@@ -215,6 +233,7 @@ Exit Sub
 Salah:
 MsgBox "Kode Pelanggan Tidak Ditemukan!", vbCritical, "Aplikasi!"
 Text_KodeBarang_Transaksi = ""
+Text_KodeBarang_Transaksi.SetFocus
 End Sub
 
 Private Sub Text_KodePelanggan_Transaksi_AfterUpdate()
@@ -231,6 +250,7 @@ Exit Sub
 Salah:
 MsgBox "Kode Pelanggan Tidak Ditemukan!", vbCritical, "Aplikasi!"
 Text_KodePelanggan_Transaksi = ""
+Text_KodePelanggan_Transaksi.SetFocus
 End Sub
 
 Private Sub textKeyword_barang_Change()
@@ -354,7 +374,7 @@ End Sub
 Sub Kode_Terakhir_Transaksi()
 Dim KODE As Object
   Set KODE = Sheet4.Range("A1000000").End(xlUp)
-  If KODE = "Kode" Then
+  If KODE = "Kode Transaksi" Then
     Sheet4.Range("I5").Value = 0
   Else
     Sheet4.Range("I5").Value = KODE.Offset(0, 0).Value
@@ -370,4 +390,10 @@ ElseIf Sheet4.Range("I4").Value >= 9 Then
 Else
   Label_Kode_Transaksi.Caption = "T-" & Format(Date, "yymmdd") & "00" & Sheet4.Range("I4") + 1
 End If
+End Sub
+
+Sub Cari_Detail()
+Sheet5.Range("A3").CurrentRegion.AdvancedFilter Action:=xlFilterCopy, _
+CriteriaRange:=Sheet5.Range("KRITERIA_DETAIL"), CopyToRange:=Sheet5.Range("FILTER_DETAIL"), Unique:=False
+Call Lisbox_Detail
 End Sub

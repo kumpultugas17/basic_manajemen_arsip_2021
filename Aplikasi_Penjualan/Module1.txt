@@ -36,3 +36,83 @@ Sub Lisbox_Filter()
     .RowSource = Sheet1.Range("DATA_BARANG_FILTER").Address(External:=True)
   End With
 End Sub
+
+Sub Lisbox_Filter_Detail()
+On Error Resume Next
+  With UserForm_Menu.ListBox_Detail
+    .ColumnCount = 6
+    .ColumnHeads = True
+    .RowSource = Sheet5.Range("DATA_DETAIL").Address(External:=True)
+  End With
+End Sub
+
+Sub Bersihkan_Field_Barang()
+  UserForm_Menu.Text_KodeBarang_Transaksi = ""
+  UserForm_Menu.Text_NamaBarang_Transaksi = ""
+  UserForm_Menu.Text_Merk_Transaksi = ""
+  UserForm_Menu.Text_Harga_Transaksi = ""
+  UserForm_Menu.Text_Jumlah_Transaksi = ""
+  UserForm_Menu.Text_Total_Transaksi = ""
+End Sub
+
+Sub Bersih_Text()
+'Kategori
+UserForm_Menu.TextKode_Kategori = ""
+UserForm_Menu.TextKategori = ""
+
+'Pencarian Data Barang
+UserForm_Menu.textKeyword_barang = ""
+UserForm_Menu.textKeyword_barang.Locked = True
+
+'Pencarian Data Pelanggan
+UserForm_Menu.textKeyword_pelanggan = ""
+UserForm_Menu.textKeyword_pelanggan.Locked = True
+
+'Transaksi
+UserForm_Menu.Label_tgl_transaksi.Caption = ""
+UserForm_Menu.Label_tgl_transaksi.Caption = Date
+
+UserForm_Menu.Text_KodePelanggan_Transaksi = ""
+UserForm_Menu.Text_NamaPelanggan_Transaksi = ""
+UserForm_Menu.Text_JenisKelamin_Transaksi = ""
+UserForm_Menu.Text_Telepon_Transaksi = ""
+UserForm_Menu.Text_Alamat_Transaksi = ""
+UserForm_Menu.Text_NamaPelanggan_Transaksi.Locked = True
+UserForm_Menu.Text_JenisKelamin_Transaksi.Locked = True
+UserForm_Menu.Text_Telepon_Transaksi.Locked = True
+UserForm_Menu.Text_Alamat_Transaksi.Locked = True
+
+UserForm_Menu.Text_KodeBarang_Transaksi = ""
+UserForm_Menu.Text_NamaBarang_Transaksi = ""
+UserForm_Menu.Text_Merk_Transaksi = ""
+UserForm_Menu.Text_Harga_Transaksi = ""
+UserForm_Menu.Text_Jumlah_Transaksi = ""
+UserForm_Menu.Text_Total_Transaksi = ""
+UserForm_Menu.Text_NamaBarang_Transaksi.Locked = True
+UserForm_Menu.Text_Merk_Transaksi.Locked = True
+UserForm_Menu.Text_Harga_Transaksi.Locked = True
+UserForm_Menu.Text_Total_Transaksi.Locked = True
+
+UserForm_Menu.Text_Subtotal_Transaksi = ""
+End Sub
+
+Sub Kode_Terakhir_Transaksi()
+Dim KODE As Object
+  Set KODE = Sheet4.Range("A1000000").End(xlUp)
+  If KODE = "Kode Transaksi" Then
+    Sheet4.Range("I5").Value = 0
+  Else
+    Sheet4.Range("I5").Value = KODE.Offset(0, 0).Value
+  End If
+End Sub
+
+Sub Otomatis_Transaksi()
+Call Kode_Terakhir_Transaksi
+If Sheet4.Range("I4").Value >= 99 Then
+  UserForm_Menu.Label_Kode_Transaksi.Caption = "T-" & Format(Date, "yymmdd") & Sheet4.Range("I4") + 1
+ElseIf Sheet4.Range("I4").Value >= 9 Then
+  UserForm_Menu.Label_Kode_Transaksi.Caption = "T-" & Format(Date, "yymmdd") & "0" & Sheet4.Range("I4") + 1
+Else
+  UserForm_Menu.Label_Kode_Transaksi.Caption = "T-" & Format(Date, "yymmdd") & "00" & Sheet4.Range("I4") + 1
+End If
+End Sub

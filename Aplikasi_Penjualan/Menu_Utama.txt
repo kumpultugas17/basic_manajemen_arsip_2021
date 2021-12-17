@@ -1,41 +1,91 @@
+Sub Kode_Terakhir_Detail()
+Dim Nomor_Detail As Object
+  Set Nomor_Detail = Sheet5.Range("A1000000").End(xlUp)
+  If Nomor_Detail = "No" Then
+    Sheet5.Range("J12").Value = 0 + 1
+  Else
+    Sheet5.Range("J12").Value = Nomor_Detail.Offset(0, 0).Value + 1
+  End If
+End Sub
+
 Private Sub Btn_Add_Transaksi_Click()
 If Text_KodePelanggan_Transaksi <> "" And Text_KodeBarang_Transaksi <> "" _
 And Text_Jumlah_Transaksi <> "" Then
-  Dim SIMPAN As Object
+  Dim DATA_GANDA As Object
+  Set DATA_GANDA = Sheet5.Range("N4:N100000").Find(What:=Text_KodeBarang_Transaksi, LookIn:=xlValues)
+  If DATA_GANDA Is Nothing Then
+    Call Kode_Terakhir_Detail
+    Dim SIMPAN As Object
     Set SIMPAN = Sheet5.Range("A10000").End(xlUp)
-    SIMPAN.Offset(1, 0).Value = Label_Kode_Transaksi.Caption
-    SIMPAN.Offset(1, 1).Value = Text_KodeBarang_Transaksi.Value
-    SIMPAN.Offset(1, 2).Value = Text_NamaBarang_Transaksi.Value
-    SIMPAN.Offset(1, 3).Value = Text_Merk_Transaksi.Value
-    SIMPAN.Offset(1, 4).Value = Text_Harga_Transaksi.Value
-    SIMPAN.Offset(1, 5).Value = Text_Jumlah_Transaksi.Value
-    SIMPAN.Offset(1, 6).Value = Text_Total_Transaksi.Value
-    Sheet5.Range("I8").Value = Label_Kode_Transaksi.Caption
-    Sheet5.Range("I4").Value = Label_Kode_Transaksi.Caption
-    Text_Subtotal_Transaksi.Value = Sheet5.Range("I9").Value
+    SIMPAN.Offset(1, 0).Value = Sheet5.Range("J12").Value
+    SIMPAN.Offset(1, 1).Value = Label_Kode_Transaksi.Caption
+    SIMPAN.Offset(1, 2).Value = Text_KodeBarang_Transaksi.Value
+    SIMPAN.Offset(1, 3).Value = Text_NamaBarang_Transaksi.Value
+    SIMPAN.Offset(1, 4).Value = Text_Merk_Transaksi.Value
+    SIMPAN.Offset(1, 5).Value = Text_Harga_Transaksi.Value
+    SIMPAN.Offset(1, 6).Value = Text_Jumlah_Transaksi.Value
+    SIMPAN.Offset(1, 7).Value = Text_Total_Transaksi.Value
+    Sheet5.Range("J8").Value = Label_Kode_Transaksi.Caption
+    Sheet5.Range("J4").Value = Label_Kode_Transaksi.Caption
+    Text_Subtotal_Transaksi.Value = Sheet5.Range("J9").Value
     Call Cari_Detail
-    Text_KodeBarang_Transaksi = ""
-    Text_NamaBarang_Transaksi = ""
-    Text_Merk_Transaksi = ""
-    Text_Harga_Transaksi = ""
-    Text_Jumlah_Transaksi = ""
-    Text_Total_Transaksi = ""
+    Call Bersihkan_Field_Barang
+  Else
+    MsgBox "Kode Barang sudah diinputkan!!", vbInformation, "APLIKASI PENJUALAN"
+    Call Bersihkan_Field_Barang
+  End If
 Else
   MsgBox "Silahkan isi Kode Pelanggan dan Kode Barang!", vbCritical, "Aplikasi Penjualan"
+End If
+End Sub
+
+Private Sub Btn_Batal_Transaksi_Click()
+If Sheet5.Range("DETAIL_TOTAL").Value > 0 Or Text_KodePelanggan_Transaksi.Value <> "" Then
+  Do While Sheet5.Range("J5").Value
+  Dim dRow As Object
+  Set dRow = Sheet5.Range("B4:B100000").Find(What:=Me.Label_Kode_Transaksi.Caption, LookIn:=xlValues)
+    dRow.Value = ""
+    dRow.Offset(0, -1).Value = ""
+    dRow.Offset(0, 1).Value = ""
+    dRow.Offset(0, 2).Value = ""
+    dRow.Offset(0, 3).Value = ""
+    dRow.Offset(0, 4).Value = ""
+    dRow.Offset(0, 5).Value = ""
+    dRow.Offset(0, 6).Value = ""
+    Sheet5.Range("BATAL_DETAIL").Sort Key1:=("BATAL_DETAIL"), _
+    ORDER1:=xlAscending, Header:=xlNo
+    Text_Subtotal_Transaksi.Value = Sheet5.Range("J9").Value
+  Loop
+  Sheet5.Range("HAPUS_FILTER_DETAIL").Value = ""
+  Call Bersih_Text
+Else
+  MsgBox "Silahkan lakukan transaksi terlebih dahulu!!", vbCritical, "APLIKASI PENJUALAN"
+End If
+End Sub
+
+Private Sub Btn_Bayar_Transaksi_Click()
+If Text_KodePelanggan_Transaksi = "" And Sheet5.Range("L4").Value = "" Then
+  MsgBox "Silahkan isi kode pelanggan dan tambah barang belanjaan!", vbCritical, "Aplikasi Penjualan"
+Else
+  UserForm_Bayar.TextSubtotal.Value = Sheet5.Range("DETAIL_TOTAL").Value
+  UserForm_Bayar.TextGrandTotal.Value = Sheet5.Range("DETAIL_TOTAL").Value
+  UserForm_Bayar.TextSubtotal.Locked = True
+  UserForm_Bayar.TextGrandTotal.Locked = True
+  UserForm_Bayar.Show
 End If
 End Sub
 
 Private Sub btn_tambah_data_barang_Click()
 UserForm_Barang.btnEdit.Visible = False
 UserForm_Barang.btnHapus.Visible = False
-UserForm_Barang.btnSimpan.Left = 198
+UserForm_Barang.BtnSimpan.Left = 198
 UserForm_Barang.Show
 End Sub
 
 Private Sub btn_tambah_data_pelanggan_Click()
 UserForm_Pelanggan.btnEdit.Visible = False
 UserForm_Pelanggan.btnHapus.Visible = False
-UserForm_Pelanggan.btnSimpan.Left = 204
+UserForm_Pelanggan.BtnSimpan.Left = 204
 UserForm_Pelanggan.Show
 End Sub
 
@@ -90,10 +140,6 @@ Sheet2.Range("H7").Value = comboKategori_Pelanggan.Value
 If comboKategori_Pelanggan <> "" Then
   textKeyword_pelanggan.Locked = False
 End If
-End Sub
-
-Private Sub Frame2_Click()
-
 End Sub
 
 Private Sub Label_Dashboard_Click()
@@ -192,8 +238,35 @@ UserForm_Barang.comboKategori.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.L
 UserForm_Barang.textMerk.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 3)
 UserForm_Barang.textHarga.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 4)
 UserForm_Barang.textStok.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 5)
-UserForm_Barang.btnSimpan.Visible = False
+UserForm_Barang.BtnSimpan.Visible = False
 UserForm_Barang.Show
+End Sub
+
+Private Sub ListBox_Detail_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+'Kode barang dari index 0 lisbox
+Kode_Barang = Me.ListBox_Detail.List(Me.ListBox_Detail.ListIndex, 0)
+'mengambil nomor dari filter_detail
+Dim Cari As Object
+Set Cari = Sheet5.Range("N4:N100000").Find(What:=Kode_Barang, LookIn:=xlValues)
+  Nomor_Detail = Cari.Offset(0, -2).Value
+'pesan akan dihapus 1 item
+Pesan = MsgBox("Item " & Kode_Barang & " akan dihapus?", vbOKCancel + vbQuestion, "APLIKASI PENJUALAN")
+If Pesan = vbOK Then
+  Dim dRow As Object
+  Set dRow = Sheet5.Range("A4:A100000").Find(What:=Nomor_Detail, LookIn:=xlValues)
+    dRow.Value = ""
+    dRow.Offset(0, 1).Value = ""
+    dRow.Offset(0, 2).Value = ""
+    dRow.Offset(0, 3).Value = ""
+    dRow.Offset(0, 4).Value = ""
+    dRow.Offset(0, 5).Value = ""
+    dRow.Offset(0, 6).Value = ""
+    dRow.Offset(0, 7).Value = ""
+    Sheet5.Range("BATAL_DETAIL").Sort Key1:=("BATAL_DETAIL"), _
+    ORDER1:=xlAscending, Header:=xlNo
+    Text_Subtotal_Transaksi.Value = Sheet5.Range("J9").Value
+    Call Cari_Detail
+End If
 End Sub
 
 Private Sub ListBox_Kategori_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
@@ -211,7 +284,7 @@ Else
 End If
 UserForm_Pelanggan.textAlamat.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 3)
 UserForm_Pelanggan.textTelepon.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 4)
-UserForm_Pelanggan.btnSimpan.Visible = False
+UserForm_Pelanggan.BtnSimpan.Visible = False
 UserForm_Pelanggan.Show
 End Sub
 
@@ -310,47 +383,6 @@ With ListBox_Kategori
 End With
 End Sub
 
-Sub Bersih_Text()
-'Kategori
-TextKode_Kategori = ""
-TextKategori = ""
-
-'Pencarian Data Barang
-textKeyword_barang = ""
-textKeyword_barang.Locked = True
-
-'Pencarian Data Pelanggan
-textKeyword_pelanggan = ""
-textKeyword_pelanggan.Locked = True
-
-'Transaksi
-Label_tgl_transaksi.Caption = ""
-Label_tgl_transaksi.Caption = Date
-
-Text_KodePelanggan_Transaksi = ""
-Text_NamaPelanggan_Transaksi = ""
-Text_JenisKelamin_Transaksi = ""
-Text_Telepon_Transaksi = ""
-Text_Alamat_Transaksi = ""
-Text_NamaPelanggan_Transaksi.Locked = True
-Text_JenisKelamin_Transaksi.Locked = True
-Text_Telepon_Transaksi.Locked = True
-Text_Alamat_Transaksi.Locked = True
-
-Text_KodeBarang_Transaksi = ""
-Text_NamaBarang_Transaksi = ""
-Text_Merk_Transaksi = ""
-Text_Harga_Transaksi = ""
-Text_Jumlah_Transaksi = ""
-Text_Total_Transaksi = ""
-Text_NamaBarang_Transaksi.Locked = True
-Text_Merk_Transaksi.Locked = True
-Text_Harga_Transaksi.Locked = True
-Text_Total_Transaksi.Locked = True
-
-Text_Subtotal_Transaksi = ""
-End Sub
-
 Sub Kode_Terakhir_Kategori()
 Dim KODE As Object
   Set KODE = Sheet3.Range("A1000000").End(xlUp)
@@ -371,29 +403,8 @@ End If
 TextKode_Kategori.Locked = True
 End Sub
 
-Sub Kode_Terakhir_Transaksi()
-Dim KODE As Object
-  Set KODE = Sheet4.Range("A1000000").End(xlUp)
-  If KODE = "Kode Transaksi" Then
-    Sheet4.Range("I5").Value = 0
-  Else
-    Sheet4.Range("I5").Value = KODE.Offset(0, 0).Value
-  End If
-End Sub
-
-Sub Otomatis_Transaksi()
-Call Kode_Terakhir_Transaksi
-If Sheet4.Range("I4").Value >= 99 Then
-  Label_Kode_Transaksi.Caption = "T-" & Format(Date, "yymmdd") & Sheet4.Range("I4") + 1
-ElseIf Sheet4.Range("I4").Value >= 9 Then
-  Label_Kode_Transaksi.Caption = "T-" & Format(Date, "yymmdd") & "0" & Sheet4.Range("I4") + 1
-Else
-  Label_Kode_Transaksi.Caption = "T-" & Format(Date, "yymmdd") & "00" & Sheet4.Range("I4") + 1
-End If
-End Sub
-
 Sub Cari_Detail()
-Sheet5.Range("A3").CurrentRegion.AdvancedFilter Action:=xlFilterCopy, _
+Sheet5.Range("B3").CurrentRegion.AdvancedFilter Action:=xlFilterCopy, _
 CriteriaRange:=Sheet5.Range("KRITERIA_DETAIL"), CopyToRange:=Sheet5.Range("FILTER_DETAIL"), Unique:=False
-Call Lisbox_Detail
+Call Lisbox_Filter_Detail
 End Sub

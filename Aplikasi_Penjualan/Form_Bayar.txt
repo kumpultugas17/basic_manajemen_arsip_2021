@@ -35,8 +35,14 @@ Else
     SIMPAN.Offset(1, 6).Value = TextGrandTotal.Value
     Unload Me
     Sheet5.Range("HAPUS_FILTER_DETAIL").Value = ""
+    Sheet6.Range("F31").Value = TextDiskon.Value
     Call Bersih_Text
     Call Bersihkan_Field_Barang
     Call Otomatis_Transaksi
+    Call Print_Preview
 End If
 End Sub
+
+
+
+

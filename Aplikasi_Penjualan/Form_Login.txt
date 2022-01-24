@@ -1,0 +1,44 @@
+Private Sub BtnBatal_Click()
+Unload Me
+UserForm_Menu.Show
+End Sub
+
+Private Sub BtnLogin_Click()
+Dim Cari_login As Object
+On Error GoTo Salah
+Set Cari_login = Sheet8.Range("C4:C100000").Find(What:=TextUsername.Value, LookIn:=xlValues)
+    If Cari_login.Offset(0, 1).Value = TextPassword.Value Then
+      Unload Me
+      If Cari_login.Offset(0, 2).Value = "superadmin" Then
+        UserForm_Menu.Label_Manajemen_Barang.Visible = True
+        UserForm_Menu.Image2.Visible = True
+        UserForm_Menu.Label_Manajemen_Pelanggan.Visible = True
+        UserForm_Menu.Image3.Visible = True
+        UserForm_Menu.Label_Manajemen_Kategori.Visible = True
+        UserForm_Menu.Image4.Visible = True
+        UserForm_Menu.Label_Transaksi.Visible = True
+        UserForm_Menu.Image5.Visible = True
+      Else
+        UserForm_Menu.Label_Transaksi.Visible = True
+        UserForm_Menu.Image5.Visible = True
+      End If
+      UserForm_Menu.Label_Login.Caption = "   Logout"
+      UserForm_Menu.Label_name.Caption = Cari_login.Offset(0, -1).Value
+      UserForm_Menu.Label_level.Caption = Cari_login.Offset(0, 2).Value
+      UserForm_Menu.Show
+    Else
+      MsgBox "Password yang dimasukkan salah, silahkan coba lagi!", vbCritical, "Aplikasi!"
+    End If
+Exit Sub
+Salah:
+MsgBox "Username tidak ditemukan!!", vbCritical, "Aplikasi!"
+End Sub
+
+Sub Bersih()
+TextUsername.Value = ""
+TextPassword.Value = ""
+End Sub
+
+Private Sub UserForm_Initialize()
+Call Bersih
+End Sub

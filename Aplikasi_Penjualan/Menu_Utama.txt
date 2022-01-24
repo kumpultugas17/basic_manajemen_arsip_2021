@@ -29,6 +29,7 @@ And Text_Jumlah_Transaksi <> "" Then
     Sheet5.Range("J4").Value = Label_Kode_Transaksi.Caption
     Text_Subtotal_Transaksi.Value = Sheet5.Range("J9").Value
     Call Cari_Detail
+    Call Data_Invoice
     Call Bersihkan_Field_Barang
   Else
     MsgBox "Kode Barang sudah diinputkan!!", vbInformation, "APLIKASI PENJUALAN"
@@ -78,14 +79,14 @@ End Sub
 Private Sub btn_tambah_data_barang_Click()
 UserForm_Barang.btnEdit.Visible = False
 UserForm_Barang.btnHapus.Visible = False
-UserForm_Barang.BtnSimpan.Left = 198
+UserForm_Barang.btnSimpan.Left = 198
 UserForm_Barang.Show
 End Sub
 
 Private Sub btn_tambah_data_pelanggan_Click()
 UserForm_Pelanggan.btnEdit.Visible = False
 UserForm_Pelanggan.btnHapus.Visible = False
-UserForm_Pelanggan.BtnSimpan.Left = 204
+UserForm_Pelanggan.btnSimpan.Left = 204
 UserForm_Pelanggan.Show
 End Sub
 
@@ -157,6 +158,37 @@ Private Sub Label_Dashboard_MouseMove(ByVal Button As Integer, ByVal Shift As In
   Label_Secondary_Manajemen_Kategori.Visible = False
   Label_Primary_Transaksi.Visible = False
   Label_Secondary_Transaksi.Visible = False
+  Label_Primary_Login.Visible = False
+  Label_Secondary_Login.Visible = False
+End Sub
+
+Private Sub Label_Login_Click()
+If Label_Login.Caption = "   Login" Then
+  Unload Me
+  UserForm_Login.Show
+Else
+  Call Menu_awal
+  Call List_Menu
+  Call Bersih_Text
+  Label_name.Caption = ""
+  Label_level.Caption = ""
+  Label_Login.Caption = "   Login"
+End If
+End Sub
+
+Private Sub Label_Login_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+  Label_Primary_Dashboard.Visible = False
+  Label_Secondary_Dashboard.Visible = False
+  Label_Primary_Manajemen_Barang.Visible = False
+  Label_Secondary_Manajemen_Barang.Visible = False
+  Label_Primary_Manajemen_Pelanggan.Visible = False
+  Label_Secondary_Manajemen_Pelanggan.Visible = False
+  Label_Primary_Manajemen_Kategori.Visible = False
+  Label_Secondary_Manajemen_Kategori.Visible = False
+  Label_Primary_Transaksi.Visible = False
+  Label_Secondary_Transaksi.Visible = False
+  Label_Primary_Login.Visible = True
+  Label_Secondary_Login.Visible = True
 End Sub
 
 Private Sub Label_Manajemen_Barang_Click()
@@ -174,6 +206,8 @@ Private Sub Label_Manajemen_Barang_MouseMove(ByVal Button As Integer, ByVal Shif
   Label_Secondary_Manajemen_Kategori.Visible = False
   Label_Primary_Transaksi.Visible = False
   Label_Secondary_Transaksi.Visible = False
+  Label_Primary_Login.Visible = False
+  Label_Secondary_Login.Visible = False
 End Sub
 
 Private Sub Label_Manajemen_Kategori_Click()
@@ -191,6 +225,8 @@ Private Sub Label_Manajemen_Kategori_MouseMove(ByVal Button As Integer, ByVal Sh
   Label_Secondary_Manajemen_Kategori.Visible = True
   Label_Primary_Transaksi.Visible = False
   Label_Secondary_Transaksi.Visible = False
+  Label_Primary_Login.Visible = False
+  Label_Secondary_Login.Visible = False
 End Sub
 
 Private Sub Label_Manajemen_Pelanggan_Click()
@@ -208,6 +244,8 @@ Private Sub Label_Manajemen_Pelanggan_MouseMove(ByVal Button As Integer, ByVal S
   Label_Secondary_Manajemen_Kategori.Visible = False
   Label_Primary_Transaksi.Visible = False
   Label_Secondary_Transaksi.Visible = False
+  Label_Primary_Login.Visible = False
+  Label_Secondary_Login.Visible = False
 End Sub
 
 Private Sub Label_Transaksi_Click()
@@ -225,6 +263,8 @@ Private Sub Label_Transaksi_MouseMove(ByVal Button As Integer, ByVal Shift As In
   Label_Secondary_Manajemen_Kategori.Visible = False
   Label_Primary_Transaksi.Visible = True
   Label_Secondary_Transaksi.Visible = True
+  Label_Primary_Login.Visible = False
+  Label_Secondary_Login.Visible = False
 End Sub
 
 Private Sub Label_Sidebar_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
@@ -238,7 +278,7 @@ UserForm_Barang.comboKategori.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.L
 UserForm_Barang.textMerk.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 3)
 UserForm_Barang.textHarga.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 4)
 UserForm_Barang.textStok.Value = Me.Listbox_Barang.List(Me.Listbox_Barang.ListIndex, 5)
-UserForm_Barang.BtnSimpan.Visible = False
+UserForm_Barang.btnSimpan.Visible = False
 UserForm_Barang.Show
 End Sub
 
@@ -275,7 +315,7 @@ TextKategori.Value = Me.ListBox_Kategori.List(Me.ListBox_Kategori.ListIndex, 1)
 End Sub
 
 Private Sub ListBox_Pelanggan_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
-UserForm_Pelanggan.TextKode.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 0)
+UserForm_Pelanggan.textKode.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 0)
 UserForm_Pelanggan.textNama.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 1)
 If Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 2) = "Laki-laki" Then
   UserForm_Pelanggan.OptionLaki_laki.Value = True
@@ -284,7 +324,7 @@ Else
 End If
 UserForm_Pelanggan.textAlamat.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 3)
 UserForm_Pelanggan.textTelepon.Value = Me.ListBox_Pelanggan.List(Me.ListBox_Pelanggan.ListIndex, 4)
-UserForm_Pelanggan.BtnSimpan.Visible = False
+UserForm_Pelanggan.btnSimpan.Visible = False
 UserForm_Pelanggan.Show
 End Sub
 
@@ -343,24 +383,14 @@ End Sub
 
 Private Sub UserForm_Initialize()
 Call Menu_awal
+Call List_Menu
 Call Bersih_Text
 Call Listbox
 Call Otomatis_Kategori
 Call Kategori_Pencarian
 Call Otomatis_Transaksi
-End Sub
-
-Sub Menu_awal()
-  Label_Primary_Dashboard.Visible = False
-  Label_Secondary_Dashboard.Visible = False
-  Label_Primary_Manajemen_Barang.Visible = False
-  Label_Secondary_Manajemen_Barang.Visible = False
-  Label_Primary_Manajemen_Pelanggan.Visible = False
-  Label_Secondary_Manajemen_Pelanggan.Visible = False
-  Label_Primary_Manajemen_Kategori.Visible = False
-  Label_Secondary_Manajemen_Kategori.Visible = False
-  Label_Primary_Transaksi.Visible = False
-  Label_Secondary_Transaksi.Visible = False
+Label_name.Caption = ""
+Label_level.Caption = ""
 End Sub
 
 Sub Listbox()
@@ -407,4 +437,9 @@ Sub Cari_Detail()
 Sheet5.Range("B3").CurrentRegion.AdvancedFilter Action:=xlFilterCopy, _
 CriteriaRange:=Sheet5.Range("KRITERIA_DETAIL"), CopyToRange:=Sheet5.Range("FILTER_DETAIL"), Unique:=False
 Call Lisbox_Filter_Detail
+End Sub
+
+Sub Data_Invoice()
+Sheet5.Range("B3").CurrentRegion.AdvancedFilter Action:=xlFilterCopy, _
+CriteriaRange:=Sheet5.Range("KRITERIA_DETAIL"), CopyToRange:=Sheet7.Range("FILTER_DATA_INVOICE"), Unique:=False
 End Sub

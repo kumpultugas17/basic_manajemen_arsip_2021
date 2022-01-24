@@ -97,6 +97,10 @@ Private Sub BtnTutup_Click()
 Unload Me
 End Sub
 
+Private Sub Label9_Click()
+
+End Sub
+
 Private Sub UserForm_Initialize()
 On Error Resume Next
 Call Bersih_Text

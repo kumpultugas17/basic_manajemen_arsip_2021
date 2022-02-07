@@ -121,7 +121,7 @@ Dim SIMPAN As Object
 Set SIMPAN = Sheet3.Range("A1000000").End(xlUp)
   SIMPAN.Offset(1, 0).Value = TextKode_Kategori.Value
   SIMPAN.Offset(1, 1).Value = TextKategori.Value
-  SIMPAN.Offset(1, 2).Value = Date
+  SIMPAN.Offset(1, 2).Value = Val(Date)
   MsgBox "Data berhasil ditambahkan!", vbInformation, "Success"
   Call Bersih_Text
   Call Otomatis_Kategori
@@ -160,6 +160,8 @@ Private Sub Label_Dashboard_MouseMove(ByVal Button As Integer, ByVal Shift As In
   Label_Secondary_Transaksi.Visible = False
   Label_Primary_Login.Visible = False
   Label_Secondary_Login.Visible = False
+  Label_Primary_Register.Visible = False
+  Label_Secondary_Register.Visible = False
 End Sub
 
 Private Sub Label_Login_Click()
@@ -189,6 +191,8 @@ Private Sub Label_Login_MouseMove(ByVal Button As Integer, ByVal Shift As Intege
   Label_Secondary_Transaksi.Visible = False
   Label_Primary_Login.Visible = True
   Label_Secondary_Login.Visible = True
+  Label_Primary_Register.Visible = False
+  Label_Secondary_Register.Visible = False
 End Sub
 
 Private Sub Label_Manajemen_Barang_Click()
@@ -208,6 +212,8 @@ Private Sub Label_Manajemen_Barang_MouseMove(ByVal Button As Integer, ByVal Shif
   Label_Secondary_Transaksi.Visible = False
   Label_Primary_Login.Visible = False
   Label_Secondary_Login.Visible = False
+  Label_Primary_Register.Visible = False
+  Label_Secondary_Register.Visible = False
 End Sub
 
 Private Sub Label_Manajemen_Kategori_Click()
@@ -227,6 +233,8 @@ Private Sub Label_Manajemen_Kategori_MouseMove(ByVal Button As Integer, ByVal Sh
   Label_Secondary_Transaksi.Visible = False
   Label_Primary_Login.Visible = False
   Label_Secondary_Login.Visible = False
+  Label_Primary_Register.Visible = False
+  Label_Secondary_Register.Visible = False
 End Sub
 
 Private Sub Label_Manajemen_Pelanggan_Click()
@@ -246,6 +254,29 @@ Private Sub Label_Manajemen_Pelanggan_MouseMove(ByVal Button As Integer, ByVal S
   Label_Secondary_Transaksi.Visible = False
   Label_Primary_Login.Visible = False
   Label_Secondary_Login.Visible = False
+  Label_Primary_Register.Visible = False
+  Label_Secondary_Register.Visible = False
+End Sub
+
+Private Sub Label_Register_Click()
+  UserForm_Registrasi.Show
+End Sub
+
+Private Sub Label_Register_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+  Label_Primary_Dashboard.Visible = False
+  Label_Secondary_Dashboard.Visible = False
+  Label_Primary_Manajemen_Barang.Visible = False
+  Label_Secondary_Manajemen_Barang.Visible = False
+  Label_Primary_Manajemen_Pelanggan.Visible = False
+  Label_Secondary_Manajemen_Pelanggan.Visible = False
+  Label_Primary_Manajemen_Kategori.Visible = False
+  Label_Secondary_Manajemen_Kategori.Visible = False
+  Label_Primary_Transaksi.Visible = False
+  Label_Secondary_Transaksi.Visible = False
+  Label_Primary_Login.Visible = False
+  Label_Secondary_Login.Visible = False
+  Label_Primary_Register.Visible = True
+  Label_Secondary_Register.Visible = True
 End Sub
 
 Private Sub Label_Transaksi_Click()
@@ -265,6 +296,8 @@ Private Sub Label_Transaksi_MouseMove(ByVal Button As Integer, ByVal Shift As In
   Label_Secondary_Transaksi.Visible = True
   Label_Primary_Login.Visible = False
   Label_Secondary_Login.Visible = False
+  Label_Primary_Register.Visible = False
+  Label_Secondary_Register.Visible = False
 End Sub
 
 Private Sub Label_Sidebar_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
@@ -377,6 +410,25 @@ Salah:
   MsgBox "Data yang dicari tidak ditemukan!!", vbCritical, "Aplikasi Penjualan"
 End Sub
 
+Private Sub UserForm_Activate()
+'Tanggal
+LabelTanggal.Caption = Format(Now(), "dddd, dd mmmm yyyy")
+
+'Waktu
+Do Until Berhenti
+LabelWaktu.Caption = FormatDateTime(Time, vbLongTime) & " Wita"
+DoEvents
+Loop
+
+'Dashboard
+Label_Jumlah.Caption = Sheet4.Range("I11").Value
+Label_Rupiah.Caption = "Rp. " & Format(CDbl(Sheet4.Range("I14").Value), "#,##0")
+End Sub
+
+Private Sub UserForm_Terminate()
+Berhenti = True
+End Sub
+
 Private Sub UserForm_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
 Call Menu_awal
 End Sub
@@ -391,6 +443,9 @@ Call Kategori_Pencarian
 Call Otomatis_Transaksi
 Label_name.Caption = ""
 Label_level.Caption = ""
+'Dashboard
+Label_Jumlah.Caption = Sheet4.Range("I11").Value
+Label_Rupiah.Caption = "Rp. " & Format(CDbl(Sheet4.Range("I14").Value), "#,##0")
 End Sub
 
 Sub Listbox()

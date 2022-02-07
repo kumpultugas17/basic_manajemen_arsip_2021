@@ -27,12 +27,16 @@ Else
   Dim SIMPAN As Object
   Set SIMPAN = Sheet4.Range("A10000").End(xlUp)
     SIMPAN.Offset(1, 0).Value = UserForm_Menu.Label_Kode_Transaksi.Caption
-    SIMPAN.Offset(1, 1).Value = UserForm_Menu.Label_tgl_transaksi.Caption
+    SIMPAN.Offset(1, 1).Value = Format(Date, "dd/mm/yyyy")
     SIMPAN.Offset(1, 2).Value = UserForm_Menu.Text_KodePelanggan_Transaksi.Value
     SIMPAN.Offset(1, 3).Value = UserForm_Menu.Text_NamaPelanggan_Transaksi.Value
     SIMPAN.Offset(1, 4).Value = TextSubtotal.Value
     SIMPAN.Offset(1, 5).Value = TextDiskon.Value
     SIMPAN.Offset(1, 6).Value = TextGrandTotal.Value
+    Sheet4.Range("I8").Value = Format(Date, "dd/mm/yyyy")
+    'Dashboard
+    UserForm_Menu.Label_Jumlah.Caption = Sheet4.Range("I11").Value
+    UserForm_Menu.Label_Rupiah.Caption = "Rp. " & Format(CDbl(Sheet4.Range("I14").Value), "#,##0")
     Unload Me
     Sheet5.Range("HAPUS_FILTER_DETAIL").Value = ""
     Sheet6.Range("F31").Value = TextDiskon.Value
@@ -42,7 +46,3 @@ Else
     Call Print_Preview
 End If
 End Sub
-
-
-
-
